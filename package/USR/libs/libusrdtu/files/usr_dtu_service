@@ -1,0 +1,33 @@
+#!/bin/sh /etc/rc.common
+START=10
+STOP=10
+USE_PROCD=1
+start_service() {
+
+# echo "dtu init script start *********************************************\n" >> /dev/console
+procd_open_instance
+procd_set_param command /usr/bin/dtu_demo
+#12096 = 12 * 60 * 24 *7 一周
+procd_set_param respawn 3600 5 120960
+procd_close_instance
+
+}
+
+stop_service() {
+ps | grep dtu_demo | grep -v grep | awk '{print $1}' | xargs kill
+cnt=0
+while [ 1 ]; do
+    PID=`ps | grep dtu_demo | grep -v grep | awk '{print $1}'`
+    if [ "$PID" == "" ]; then
+        break;
+    fi
+    usleep 100000
+    let cnt=cnt+1
+    if [ $cnt -ge 15 ]; then
+        ps | grep dtu_demo | grep -v grep | awk 'NR==1{print $1}' | xargs kill -s 9
+        break
+    fi
+
+done
+}
+

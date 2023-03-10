@@ -1,0 +1,4 @@
+config apn 'APN'
+	option name ''
+	option usr ''
+	option paw ''

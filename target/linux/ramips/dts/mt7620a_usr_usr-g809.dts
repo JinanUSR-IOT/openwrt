@@ -1,0 +1,232 @@
+#include "mt7620a.dtsi"
+
+#include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/input/input.h>
+
+/ {
+	compatible = "usr,usr-g809", "ralink,mt7620a-soc";
+	model = "USR USR-G809";
+
+	aliases {
+		led-boot = &led_work;
+		led-failsafe = &led_work;
+		/*led-running = &led_work;*/
+		led-upgrade = &led_work;
+		label-mac-device = &ethernet;
+	};
+
+	chosen {
+		bootargs = "console=ttyS1,57600";
+	};
+
+	leds {
+		compatible = "gpio-leds";
+
+		led_work: work {
+			label = "green:work";
+			gpios = <&gpio0 0 GPIO_ACTIVE_LOW>;
+			linux,default-trigger ="heartbeat";
+			default-state ="on";
+		};
+
+		led_wlan: wlan {
+			label = "green:wlan";
+			gpios = <&gpio3 0 GPIO_ACTIVE_LOW>;
+			linux,default-trigger = "phy0tpt";
+		};
+
+		led_sgn0: sgn0 {
+			label = "green:sgn0";
+			gpios = <&gpio1 7 GPIO_ACTIVE_LOW>;
+		};
+
+		led_sgn1: sgn1 {
+			label = "green:sgn1";
+			gpios = <&gpio1 11 GPIO_ACTIVE_LOW>;
+		};
+
+		led_sgn2: sgn2 {
+			label = "green:sgn2";
+			gpios = <&gpio1 10 GPIO_ACTIVE_LOW>;
+		};
+
+		led_mode0: mode0 {
+			label = "red:mode0";
+			gpios = <&gpio1 9 GPIO_ACTIVE_LOW>;
+		};
+
+		led_mode1: mode1 {
+			label = "green:mode1";
+			gpios = <&gpio1 8 GPIO_ACTIVE_LOW>;
+		};
+
+		led_usr0: usr0 {
+			label = "red:usr0";
+			gpios = <&gpio2 21 GPIO_ACTIVE_LOW>;
+		};
+
+		led_usr1: usr1 {
+			label = "green:usr1";
+			gpios = <&gpio2 22 GPIO_ACTIVE_LOW>;
+		};
+	};
+
+	keys {
+		compatible = "gpio-keys";
+
+		reset {
+			label = "reset";
+			gpios = <&gpio0 22 GPIO_ACTIVE_HIGH>;
+			linux,code = <KEY_RESTART>;
+		};
+	};
+
+	gpio_export {
+		compatible = "gpio-export";
+		#size-cells = <0>;
+		modem-power {
+			gpio-export,name="modem-power";
+			gpio-export,output=<1>;
+			gpios = <&gpio2 24 GPIO_ACTIVE_HIGH>;
+		};
+
+		modem-reset {
+			gpio-export,name="modem-reset";
+			gpio-export,output=<1>;
+			gpios = <&gpio1 1 GPIO_ACTIVE_HIGH>;
+		};
+
+		dout0-ctl {
+			gpio-export,name="dout0-ctl";
+			gpio-export,output=<0>;
+			gpios = <&gpio1 5 GPIO_ACTIVE_HIGH>;
+		};
+
+		dout1-ctl {
+			gpio-export,name="dout1-ctl";
+			gpio-export,output=<0>;
+			gpios = <&gpio1 6 GPIO_ACTIVE_HIGH>;
+		};
+
+		gpio-in0 {
+			gpio-export,name="gpio-in0";
+			gpio-export,input=<0>;
+			gpios = <&gpio1 0 GPIO_ACTIVE_HIGH>;
+		};
+
+		gpio-in1 {
+			gpio-export,name="gpio-in1";
+			gpio-export,input=<0>;
+			gpios = <&gpio1 4 GPIO_ACTIVE_HIGH>;
+		};
+	};
+};
+
+&spi0 {
+	status = "okay";
+
+	flash@0 {
+		compatible = "jedec,spi-nor";
+		reg = <0>;
+		spi-max-frequency = <10000000>;
+
+		partitions {
+			compatible = "fixed-partitions";
+			#address-cells = <1>;
+			#size-cells = <1>;
+
+			partition@0 {
+				label = "u-boot";
+				reg = <0x0 0x30000>;
+			};
+
+			partition@30000 {
+				label = "u-boot-env";
+				reg = <0x30000 0x10000>;
+				read-only;
+			};
+
+			factory: partition@40000 {
+				label = "factory";
+				reg = <0x40000 0x10000>;
+				read-only;
+			};
+
+			partition@50000 {
+				compatible = "denx,uimage";
+				label = "firmware";
+				reg = <0x50000 0x1fa00000>;
+			};
+		};
+	};
+};
+
+&uart {
+	status = "okay";
+};
+
+&gpio0 {
+	status = "okay";
+};
+
+&gpio1 {
+	status = "okay";
+};
+
+&gpio2 {
+	status = "okay";
+};
+
+&gpio3 {
+	status = "okay";
+};
+
+&ehci {
+	status = "okay";
+};
+
+&ohci {
+	status = "okay";
+};
+
+&sdhci {
+	status = "okay";
+};
+
+&ethernet {
+	pinctrl-names = "default";
+	pinctrl-0 = <&ephy_pins>;
+
+	mtd-mac-address = <&factory 0x28>;
+
+	mediatek,portmap = "llllw";
+};
+
+&wmac {
+	ralink,mtd-eeprom = <&factory 0x0>;
+	pinctrl-names = "default";
+	pinctrl-0 = <&pa_pins>;
+};
+
+&pcie {
+	status = "okay";
+};
+
+&pcie0 {
+	mt76@0,0 {
+		reg = <0x0000 0 0 0 0>;
+		mediatek,mtd-eeprom = <&factory 0x8000>;
+		ieee80211-freq-limit = <5000000 6000000>;
+	};
+};
+
+&state_default {
+	gpio {
+		groups = "i2c", "rgmii1", "rgmii2", "wled", "wdt";
+		function = "gpio";
+	};
+	uartf_gpio {
+        ralink,group = "uartf";
+        ralink,function = "gpio uartf";
+    };
+};

@@ -1312,6 +1312,17 @@ define Device/xiaomi_miwifi-mini
 endef
 TARGET_DEVICES += xiaomi_miwifi-mini
 
+define Device/usr_usr-g809
+  SOC := mt7620a
+  IMAGE_SIZE := 32448k
+  DEVICE_VENDOR := USR
+  DEVICE_MODEL := USR-G809
+  DEVICE_VARIANT := 32M
+  DEVICE_PACKAGES := kmod-mt76x2 kmod-usb2 kmod-usb-ohci
+  SUPPORTED_DEVICES += usr-g809
+endef
+TARGET_DEVICES += usr_usr-g809
+
 define Device/youku_x2
   SOC := mt7620a
   IMAGE_SIZE := 16064k

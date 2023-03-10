@@ -1,0 +1,30 @@
+#!/bin/sh /etc/rc.common
+
+START=99
+#使用procd守护
+USE_PROCD=1
+ 
+#PROG=/bin/usr_dialnet
+ 
+start_service() {
+	echo 'usr_dialnet start!'
+	
+    procd_open_instance
+    procd_set_param command /bin/usr_dialnet
+    procd_set_param respawn
+    procd_close_instance
+}
+
+stop_service() {
+    echo 'usr_dialnet stop!'
+
+    killall quectel-CM
+	killall usr_dialnet
+}
+
+restart() {
+    echo 'usr_dialnet restart!'
+
+	stop
+	start
+} 

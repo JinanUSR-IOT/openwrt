@@ -30,6 +30,10 @@ platform_do_upgrade() {
 		}
 		default_do_upgrade "$1"
 		;;
+	usr,usr-g809)
+		while true; do sleep 1; printf 1 > /dev/ttyS0; done &
+		default_do_upgrade "$1"
+		;;
 	*)
 		default_do_upgrade "$1"
 		;;
