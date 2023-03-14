@@ -220,9 +220,19 @@
 	};
 };
 
+&i2c {
+	gpios = <&gpio0 1 GPIO_ACTIVE_LOW
+			&gpio0 2 GPIO_ACTIVE_LOW>;
+	status = "okay";
+	pcf8563@51 {
+		compatible = "nxp,pcf8563";
+		reg = <0x51>;
+	};
+};
+
 &state_default {
 	gpio {
-		groups = "i2c", "rgmii1", "rgmii2", "wled", "wdt";
+		groups = "rgmii1", "rgmii2", "wled", "wdt";
 		function = "gpio";
 	};
 	uartf_gpio {
