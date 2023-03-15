@@ -62,8 +62,8 @@ int param_init(DTU_PARAM *param)
 	char buf[10];
 	int result = 0;
 	result = shell_get("uci get usr_dtu.uart2.baud", buf, sizeof(buf));
-	param->baund = result ? 115200 : atoi(buf);
-	printf("get param->baund: %d\n", param->baund);
+	param->baud = result ? 115200 : atoi(buf);
+	printf("get param->baud: %d\n", param->baud);
 
 	result = shell_get("uci get usr_dtu.uart2.parity", buf, sizeof(buf));
 	param->parity_type = result ? 0 : atoi(buf);

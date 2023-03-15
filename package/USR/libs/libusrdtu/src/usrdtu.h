@@ -10,7 +10,7 @@
 
 typedef struct _uci_param
 {
-    unsigned int baund;
+    unsigned int baud;
     unsigned char parity_type;
     unsigned char data_bits;
     unsigned char stop_bits;
