@@ -1,12 +1,10 @@
-
 config uart2 'uart2'
-	option parity 'NONE'
+	option parity '0'
 	option data '8'
 	option stop '1'
-	option flow 'NFC'
+	option flow '0'
 	option fl '1000'
 	option baud '115200'
-	option period_auto 'OFF'
 	option ft '10'
 	option mode '0'
 
